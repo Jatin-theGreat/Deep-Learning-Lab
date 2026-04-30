@@ -1,8 +1,8 @@
 import os
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS
 
-CHROMA_DB_DIR = "chroma_db"
+FAISS_DB_DIR = "faiss_db"
 
 
 def get_embedding_model():
@@ -12,19 +12,20 @@ def get_embedding_model():
 
 
 def create_vector_store(chunks):
-    os.makedirs(CHROMA_DB_DIR, exist_ok=True)
+    os.makedirs(FAISS_DB_DIR, exist_ok=True)
     embeddings = get_embedding_model()
-    vector_store = Chroma.from_documents(
+    vector_store = FAISS.from_documents(
         documents=chunks,
-        embedding=embeddings,
-        persist_directory=CHROMA_DB_DIR
+        embedding=embeddings
     )
+    vector_store.save_local(FAISS_DB_DIR)
     return vector_store
 
 
 def load_vector_store():
     embeddings = get_embedding_model()
-    return Chroma(
-        persist_directory=CHROMA_DB_DIR,
-        embedding_function=embeddings
+    return FAISS.load_local(
+        FAISS_DB_DIR,
+        embeddings,
+        allow_dangerous_deserialization=True
     )
