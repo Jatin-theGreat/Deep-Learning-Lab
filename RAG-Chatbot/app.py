@@ -1,5 +1,7 @@
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.makedirs("uploads", exist_ok=True)
+os.makedirs("chroma_db", exist_ok=True)
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -92,15 +94,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Title
-st.markdown(
-    '<div class="main-title">🤖 AI PDF Chatbot</div>',
-    unsafe_allow_html=True
-)
-
-st.markdown(
-    '<div class="sub-title">Upload PDFs, Ask Questions, Get Intelligent Answers</div>',
-    unsafe_allow_html=True
-)
+st.markdown('<div class="main-title">🤖 AI PDF Chatbot</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">Upload PDFs, Ask Questions, Get Intelligent Answers</div>', unsafe_allow_html=True)
 
 # Session State
 if "vector_store" not in st.session_state:
@@ -136,7 +131,6 @@ with st.sidebar:
 
                 documents = load_multiple_pdfs(file_paths)
                 chunks = split_documents(documents)
-
                 vector_store = create_vector_store(chunks)
 
                 st.session_state.vector_store = vector_store
@@ -171,13 +165,10 @@ query = st.chat_input("Ask anything about your uploaded PDFs...")
 
 if query:
     if st.session_state.rag_chain is None:
-        st.warning("Please upload and process PDFs first.")
+        st.warning("⚠️ Please upload and process PDFs first.")
         st.stop()
 
-    st.session_state.messages.append({
-        "role": "user",
-        "content": query
-    })
+    st.session_state.messages.append({"role": "user", "content": query})
 
     with st.chat_message("user"):
         st.markdown(query)
@@ -186,19 +177,12 @@ if query:
         with st.spinner("Thinking..."):
             response = st.session_state.rag_chain(query)
             answer = response["answer"]
-
             st.markdown(answer)
 
             with st.expander("📚 Source Documents"):
                 for i, doc in enumerate(response["source_documents"], 1):
-                    source = os.path.basename(
-                        doc.metadata.get("source", "Unknown")
-                    )
-
+                    source = os.path.basename(doc.metadata.get("source", "Unknown"))
                     st.markdown(f"### 📄 Source {i}: {source}")
                     st.write(doc.page_content[:600] + "...")
 
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": answer
-    })
+    st.session_state.messages.append({"role": "assistant", "content": answer})
