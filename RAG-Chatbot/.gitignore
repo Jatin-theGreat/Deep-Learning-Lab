@@ -1,0 +1,73 @@
+# =========================
+# Python cache files
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# =========================
+# Virtual environment
+# =========================
+venv/
+env/
+ENV/
+.venv/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.local
+.env.* 
+
+# =========================
+# Streamlit
+# =========================
+.streamlit/secrets.toml
+
+# =========================
+# Jupyter Notebook checkpoints
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Chroma / Vector DB (IMPORTANT)
+# =========================
+chroma_db/
+*.sqlite3
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE files
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# HuggingFace / cache
+# =========================
+.cache/
+huggingface_hub/
+
+# =========================
+# Streamlit local runs
+# =========================
+.streamlit/runtime/
+
+# =========================
+# Misc
+# =========================
+*.tmp
+*.bak
